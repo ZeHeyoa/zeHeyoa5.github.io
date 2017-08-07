@@ -1,0 +1,19 @@
+body {
+	background-color: #000;
+	color			: #fff;
+	font			: 12px verdana;
+	line-height		: 18px;
+}
+table {
+	font			: 12px verdana;
+	line-height		: 18px;
+}
+canvas {
+	border			: 1px solid #fff;
+}
+input {
+	line-height		: 16px;
+	border			: 1px solid #fff;
+	padding			: 0px;
+	margin			: 2px;
+}
