@@ -151,7 +151,6 @@
 		getl("zangle").value = cam.z;
 
 		curline=0;
-		if (timer) { clearTimeout(timer); timer=false; }
 		
 		canv = getl("canv");
 		if (canv && canv.getContext) {
@@ -195,7 +194,7 @@
 			var x,y,xy,p=pix;
 			for (xy=y=0; y<hei; y++) {
 				for (x=0; x<wid; x++,xy+=4) {
-					ctx.fillStyle="rgb("+p[xy]+","+p[xy+1]+","+p[xy+2]+")";
+					ctx.fillStyle="rgba("+p[xy]+","+p[xy+1]+","+p[xy+2]+",0.5)";
 					ctx.fillRect(x,y,x+1,y+1);
 				}
 			}
@@ -339,7 +338,6 @@
 	}
 	
 	var curline = 0;
-	var timer = null;
 	var start;
 	var anim=false;
 	
@@ -363,7 +361,6 @@
 		// else startframe() will be called back when pending images have loaded
 	}
 	
-	var updatetimer=false;
 	function startframe() {
 		if (show && !imgdata) {
 			ctx.fillRect(0,0, wid,hei);
@@ -373,8 +370,8 @@
 
 		getl("progress").innerHTML = "Rendering: 0%";
 		start = new Date();
-		updatetimer=setInterval("refresh()", 0);
-		setTimeout("tick()", 0);
+		refresh();
+		tick();
 	}
 
 	function tick() {
@@ -429,22 +426,22 @@
 		}
 		
 		if (curline<hei) {
-			timer = setTimeout("tick()", 0);
+			tick();
 		} else {
-			if (updatetimer) { clearInterval(updatetimer); updatetimer=false; }
+		
 			var end = new Date();
 			getl("progress").innerHTML = framenum+" Time: "+(end.getTime()-start.getTime())+"ms";
 			curline = 0;
 			if (ctx && !show) {
 				getl("progress2").innerHTML += "Plotting...";
-				setTimeout("refresh();", 0);
+				refresh();
 			} else
 				refresh();
 				
 			framenum++;
 			
 			if (anim) {
-				timer = setTimeout("renderframe()", 0);
+				renderframe();
 			}
 		}
 	}

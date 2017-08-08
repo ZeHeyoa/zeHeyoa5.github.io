@@ -43,9 +43,9 @@
 		//plane(0,-70,0, 0,-70,-10, -20,-70,0, 1,1,1, 0.6,1.0,32, 0.4).setuv(300,0,0, 0,0,300, 0,0, tilefunc).setbitmap("c.jpg");
 		
 		//disc(0,60,140,	0,0,-1,		150, 1,1,1, 0.5,1.0,64, 0.6).setuv(300,0,0, 0,300,0, 0.5,0.5, bitfunc).setbitmap("b.jpg");
-		disc(0,-70,0,	0,1,0,		230, 1,1,1, 0.9,0.05,0.9, 0)
+		disc(0,-70,-50,	0,1,0,		130, 1,1,1, 0.2,0.1,0.5, 0.005)
 		.setuv(300,0,0, 0,0,300, 0,0, tilefunc)
-		.setbitmap("image/w2.jpg");
+		.setbitmap("image/me.jpg");
 		
 		//function(ux,uy,uz, vx,vy,vz, uo,vo, texturefunc) {
 					//disc(-110,-50,-100,	0,1,0,		100, 1,1,1, 0.6,1.0,128, 0.4).setuv(200,0,0, 0,0,200, 0.5,0.5, bitfunc).setbitmap("34.jpg");
@@ -61,15 +61,16 @@
 	   // cylinder(x,y,z, x1,y1,z1, r, cr,cg,cb, d,p,pp,rf) 		
 		cylinder(20,-70,-110, 20,20,-110, 30, 1,1,1, 0.6,1.0,32, 0.25)
 			.setuv(-3,0,0, 0,1,0, 0,0, tilefunc)
-			.setbitmap("image/psg.jpg")
+			.setbitmap("image/vee.jpg")
 			.setinside(0.35,0.35,0.35, 0.5,1.0,32, 1.0)
 			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/w1.jpg");
 
 
-		light( -100, 100, 0, 1,1,1);	// white light
+		light( -100, 100, -10, 1,1,1);	// white light
 		light(0,   100,-10, 1,1,1);	// purple light
-		light(100, 100,0, 1,1,1);
-
+		light(100, 100,-20, 1,1,1);
+		light(-100, 100,-30, 1,1,1);
+	light(0, -10,-110, 1,1,1);
 		createviewmatrix();
 		
 		// apply transform
