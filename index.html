@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+ <script src='js/dat.gui.min.js'></script>
  <script src='js/rayTracer.js' ></script>
  <script src='js/disc.js'></script>
  <script src='js/plane.js' ></script>
@@ -9,44 +10,26 @@
  <script src='js/light.js' ></script>
  <script src='js/imageMgr.js'></script>
  <script src='js/scene.js'></script>
- <script src='js/ui.js' ></script>
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body onload="load()">
-<br/>
-Size: <select onchange="changesize()" id="sizesel">
-		<option value="100x80">100x80</option>
-		<option value="200x160">200x160</option>
-		<option value="320x256" >320x256</option>
-		<option value="400x320">400x320</option>
-		<option value="500x400">500x400</option>
-		<option value="640x512" SELECTED>640x512</option>
-		<option value="800x640">800x640</option>
-		<option value="1200x960">1200x960</option>
-		<option value="1680x1050">1680x1050 (URMENTAL!)</option>
-	</select>
+<body>
 	Anti-alias: <input type=checkbox onchange="changeaa()" id="aacheck" />
-<!--	Bilinear Filter: <input type=checkbox id="bicheck" />-->
+	Bilinear Filter: <input type=checkbox id="bicheck" />
 
 <table border=0 cellpadding=0 cellspacing=0>
 <tr>
 <td align=center valign=top>
-	<br/> <!-- 400 x 450      800x640    600x480-->
-	<div id="canvdiv" style="width:800px; height:640px" >
-		<canvas id="canv" width=800 height=640></canvas>
+
+	<div id="canvdiv" style="width:1200px; height:800px" >
+		<canvas id="canv" width=1200 height=800></canvas>
+		<canvas id="canvTmp1" width=1200 height=800 hidden></canvas>
 	</div><br/>
-	Viewpoint 
-	x:<input type=text size=6 id="xangle" value="303" />
-	y:<input type=text size=6 id="yangle" value="-22" />
-	z:<input type=text size=6 id="zangle" value="116" />
-	<button onclick="randomview()">Random</button><br/><br/>
-	<button onclick="load()">Render</button><br/><br/>
-	<div id="progress">Initialising textures...</div>
-	<div id="progress2">&nbsp;</div>
-	<div id="msg">&nbsp;</div>
-	<div id="dbg">&nbsp;</div>
+
+
 </td>
 </tr></table>
+ <script src='js/ui.js' ></script>
 </body>
 </html>

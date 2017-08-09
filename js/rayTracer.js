@@ -21,7 +21,7 @@
 
 	var antialias = false;				// true = SLOOOOOOOOOOOOOOOOOOOOW!
 	var bilinear = true;
-	var cam	= {x:-85, y:90, z:-260};	// camera position
+	var cam	= {x:-29, y:28, z:-91, pixelMvt:8};	// camera position
 //	var cam = {x:120.24, y:151.63, z:218.39};
 	var look={x:-11, y:0, z:-50};		// look at point
 	var up	={x:0, y:1, z:0	};			// up vector
@@ -143,16 +143,16 @@
 	}
 	
 	function load() {
-		if (getl("xangle").value!="") cam.x = parseFloat(getl("xangle").value);
+	/*	if (getl("xangle").value!="") cam.x = parseFloat(getl("xangle").value);
 		if (getl("yangle").value!="") cam.y = parseFloat(getl("yangle").value);
 		if (getl("zangle").value!="") cam.z = parseFloat(getl("zangle").value);
 		getl("xangle").value = cam.x;
 		getl("yangle").value = cam.y;
-		getl("zangle").value = cam.z;
+		getl("zangle").value = cam.z;*/
 
 		curline=0;
 		
-		canv = getl("canv");
+		canv = getl("canvTmp1");
 		if (canv && canv.getContext) {
 			wid = canv.attributes.width.value;
 			hei = canv.attributes.height.value;
@@ -163,11 +163,7 @@
 			pix = new Array();
 			wid = getl("canvdiv").clientWidth;
 			hei = getl("canvdiv").clientHeight;
-			if (!ctx) {
-				getl("msg").innerHTML="Use Firefox (3.1 beta preferably), Opera, Safari, Chrome,<br/>or almost any non-IE browser to see the output";
-			} else {
-				getl("msg").innerHTML="Use Firefox (3.1 beta perferably), Opera 9.60, or latest<br/>Safari/WebKit for textures, and faster rendering";
-			}
+	
 		}
 
 		wh = wid/2;
@@ -183,7 +179,8 @@
 	}
 	
 	function refresh() {
-		if (curline>0) getl("progress").innerHTML = "Rendering: "+Math.round(curline*100/hei)+"%";
+	
+		if (curline>0) majGUI('msg' ,"Rendering: "+Math.round(curline*100/hei)+"%");
 		
 		if (show) {
 			ctx.putImageData(imgdata, 0,0);
@@ -198,7 +195,7 @@
 					ctx.fillRect(x,y,x+1,y+1);
 				}
 			}
-			getl("progress2").innerHTML = "&nbsp;";
+	
 		}
 	}
 
@@ -368,7 +365,7 @@
 			pix = imgdata.data;
 		} 
 
-		getl("progress").innerHTML = "Rendering: 0%";
+		majGUI('msg' ,"Rendering: 0%");
 		start = new Date();
 		refresh();
 		tick();
@@ -430,10 +427,10 @@
 		} else {
 		
 			var end = new Date();
-			getl("progress").innerHTML = framenum+" Time: "+(end.getTime()-start.getTime())+"ms";
+			majGUI('msg' ,framenum+" Time: "+(end.getTime()-start.getTime())+"ms");
 			curline = 0;
 			if (ctx && !show) {
-				getl("progress2").innerHTML += "Plotting...";
+				majGUI('msg' ,"Plotting...");
 				refresh();
 			} else
 				refresh();
@@ -443,6 +440,14 @@
 			if (anim) {
 				renderframe();
 			}
+			
+      var canv2 = getl("canv");
+      if (canv2 && canv2.getContext) {
+
+         canv2.getContext('2d').drawImage(getl("canvTmp1"), 0,0, canv2.width, canv2.height);
+          }
+      
+			
 		}
 	}
 	

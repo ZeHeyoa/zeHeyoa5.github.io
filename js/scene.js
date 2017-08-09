@@ -44,11 +44,11 @@
 		
 		//disc(0,60,140,	0,0,-1,		150, 1,1,1, 0.5,1.0,64, 0.6).setuv(300,0,0, 0,300,0, 0.5,0.5, bitfunc).setbitmap("b.jpg");
 		disc(0,-70,-50,	0,1,0,		130, 1,1,1, 0.2,0.1,0.5, 0.005)
-		.setuv(300,0,0, 0,0,300, 0,0, tilefunc)
-		.setbitmap("image/me.jpg");
+		.setuv(200,0,0, 0,0,200, 0.5,0.55, bitfunc)
+		.setbitmap("image/mo.jpg");
 		
 		//function(ux,uy,uz, vx,vy,vz, uo,vo, texturefunc) {
-					//disc(-110,-50,-100,	0,1,0,		100, 1,1,1, 0.6,1.0,128, 0.4).setuv(200,0,0, 0,0,200, 0.5,0.5, bitfunc).setbitmap("34.jpg");
+					//disc(-110,-50,-100,	0,1,0,		100, 1,1,1, 0.6,1.0,128, 0.4).setuv(200,0,0, 0,0,200, 0.5,0.5, bitfunc).setbitmap("mo.jpg");
 			
 	/*	disc(-150,0,-50, 1,0.2,-0.2, 70, 0,0,0, 0.5,1.0,32, 0.2).		// left
 			setuv(0,20,0, 0,0,20, 0,0,	chequer1);

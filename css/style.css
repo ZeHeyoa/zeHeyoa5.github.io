@@ -9,7 +9,13 @@ table {
 	line-height		: 18px;
 }
 canvas {
-	border			: 1px solid #fff;
+ position:fixed;
+    min-height: 100%;
+    left:0%;
+    z-index: -1000;
+    width:100%;
+    height: 100%;
+    top:0%;
 }
 input {
 	line-height		: 16px;

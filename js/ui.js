@@ -21,27 +21,55 @@
 		//load();
 	}
 	
+	function changeaa() { antialias = getl("aacheck").checked; }
+	
+	
+ var objet = function() {
+   this.posXcam= cam.x,
+   this.posYcam= cam.y,
+   this.posZcam= cam.z,
+   
+   this.msg= "",
+   this.pixelMvt= cam.pixelMvt
+   };
+      
+   var obj = new objet();
+   var gui = new dat.GUI({  load: JSON });
+   gui.remember(obj);
 
-	function changesize() {
-		var x,y;
-		switch (getl("sizesel").value) {
-		case "100x80" :		x=100;	y=80;	break;
-		case "200x160":		x=200;	y=160;	break;
-		case "320x256":		x=320;	y=256;	break;
-		case "400x320":		x=400;	y=320;	break;
-		case "500x400":		x=500;	y=400;	break;
-		case "640x512":		x=640;	y=512;	break;
-		case "800x640":		x=800;	y=640;	break;
-		case "1200x960":	x=1200;	y=960;	break;
-		case "1680x1050":	x=1680;	y=1050;	break;
-		default:return;
-		}
-
-		var div = getl("canvdiv");
+   var maj  = function(value) { 
+   cam.x = obj.posXcam;
+   cam.y = obj.posYcam;
+   cam.z = obj.posZcam;
+   cam.pixelMvt = obj.pixelMvt;
+   
+      
+   	var x=screen.width,y=screen.height;
+   		var div = getl("canvdiv");
 		div.style.width = x+"px";
 		div.style.height= y+"px";
-		
-		var canv = getl("canv");
+		var canv = getl("canvTmp1");
+		if (canv && canv.getContext) {
+			canv.attributes.width.value = x;
+			canv.attributes.height.value = y;
+			canv.width = Math.floor((x * 1/cam.pixelMvt)/10)*10;
+			canv.height = Math.floor((y * 1/cam.pixelMvt)/10)*10;
+			imgdata = false;
+		}
+		load();
+   
+   }
+
+   var maj2  = function(value) {  
+      cam.x = obj.posXcam;
+   cam.y = obj.posYcam;
+   cam.z = obj.posZcam;
+   
+     	var x=screen.width,y=screen.height;
+   		var div = getl("canvdiv");
+		div.style.width = x+"px";
+		div.style.height= y+"px";
+		var canv = getl("canvTmp1");
 		if (canv && canv.getContext) {
 			canv.attributes.width.value = x;
 			canv.attributes.height.value = y;
@@ -50,6 +78,20 @@
 			imgdata = false;
 		}
 		load();
-	}
-	
-	function changeaa() { antialias = getl("aacheck").checked; }
+
+   }
+   
+   var majGUI = function(n,v){
+  for(var i = 0; i<gui.__folders.Mouvement.__controllers.length;i++){
+      if( gui.__folders.Mouvement.__controllers[i].property == n ) gui.__folders.Mouvement.__controllers[i].setValue(v);
+   }
+};
+   
+   f = gui.addFolder('Mouvement');
+   f.add(obj, "posXcam").min(-1000).max(1000).onChange(maj).onFinishChange(maj2);   
+   f.add(obj, "posYcam").min(-1000).max(1000).onChange(maj).onFinishChange(maj2);
+   f.add(obj, "posZcam").min(-1000).max(1000).onChange(maj).onFinishChange(maj2);
+   f.add(obj, "msg");   
+   f.add(obj, "pixelMvt").min(0).max(124).onChange(maj).onFinishChange(maj2);  
+   f.open();
+ load();
