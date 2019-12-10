@@ -63,7 +63,7 @@
 			.setuv(-3,0,0, 0,1,0, 0,0, tilefunc)
 			.setbitmap("image/vee.jpg")
 			.setinside(0.35,0.35,0.35, 0.5,1.0,32, 1.0)
-			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/w1.jpg");
+			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/f.jpg");
 
 
 		light( -100, 100, -10, 1,1,1);	// white light
