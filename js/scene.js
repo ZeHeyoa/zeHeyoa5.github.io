@@ -45,7 +45,7 @@
 		//disc(0,60,140,	0,0,-1,		150, 1,1,1, 0.5,1.0,64, 0.6).setuv(300,0,0, 0,300,0, 0.5,0.5, bitfunc).setbitmap("b.jpg");
 		disc(0,-70,-50,	0,1,0,		130, 1,1,1, 0.2,0.1,0.5, 0.005)
 		.setuv(200,0,0, 0,0,200, 0.5,0.55, bitfunc)
-		.setbitmap("image/y.jpg");
+		.setbitmap("image/ca.png");
 		
 		//function(ux,uy,uz, vx,vy,vz, uo,vo, texturefunc) {
 					//disc(-110,-50,-100,	0,1,0,		100, 1,1,1, 0.6,1.0,128, 0.4).setuv(200,0,0, 0,0,200, 0.5,0.5, bitfunc).setbitmap("mo.jpg");
@@ -66,7 +66,7 @@
 			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/f.jpg");
 
 		//cylinder(90,-70,110, 20,20,-110, 30, .4,.4,.4, 1,1.0,3, 1);
-		sphere( 90,-70,110, 170, 0.4,0.4,0.4, 1,1,64, 1.0);
+		sphere( 90,-70,110, 20, 0.4,0.4,0.4, 1,1,64, 1.0);
 
 		light( -100, 100, -10, 1,1,1);	// white light
 		light(0,   100,-10, 1,1,1);	// purple light
