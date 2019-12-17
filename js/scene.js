@@ -33,7 +33,7 @@
 		//sphere(  0,   100,   200, 170, 0.1,0.1,0.1, 0.5,1.0,64, 1.0);	// white sphere
 		//sphere( -40, -45,-130, 25, 1,0,0, 1.0,1.0, 8, 0.6).			// red sphere
  	   	 //setuv(1,0,0, 0,1,0, 0,0, tilefunc).setbitmap("bresil.jpg");
-		sphere( 0, 1000, 0, 5000, 0,0,0, 0.5,1.0,16, 1).			// green sphere
+		sphere( 0, 1000, 0, 50000, 0,0,0, 0.5,1.0,16, 1).			// green sphere
 			sethalf(0,-1,0, 0,0,0, 0.5,1.0,32, 1);
 		//sphere(  95, -50,-125, 20, 0,0,1, 0.8,0.7,16, 0.6);			// blue sphere
 
