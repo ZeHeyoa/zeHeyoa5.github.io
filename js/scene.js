@@ -15,7 +15,7 @@
 		texturewaiting = 0;
 		var s,p,d;
 		
-		//bilinear = getl("bicheck").checked;
+		bilinear = getl("bicheck").checked;
 		var bitfunc = bilinear ? bitmap_bi : bitmap;
 		var tilefunc = bilinear ? tilebitmap_bi : tilebitmap;
 		
@@ -66,7 +66,7 @@
 			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/f.jpg");
 
 		//cylinder(90,-70,110, 20,20,-110, 30, .4,.4,.4, 1,1.0,3, 1);
-		sphere( 90,-70,110, 20, 0.4,0.4,0.4, 1,1,64, 1.0);
+		sphere( 0, 70,110, 20, 0.4,0.4,0.4, 0.5,1.0,32, 1.0);
 
 		light( -100, 400, -10, 1,1,1);	// white light
 		light(0,   400,-10, 1,1,1);	// purple light
