@@ -33,8 +33,8 @@
 		//sphere(  0,   100,   200, 170, 0.1,0.1,0.1, 0.5,1.0,64, 1.0);	// white sphere
 		//sphere( -40, -45,-130, 25, 1,0,0, 1.0,1.0, 8, 0.6).			// red sphere
  	   	 //setuv(1,0,0, 0,1,0, 0,0, tilefunc).setbitmap("bresil.jpg");
-		sphere( 0, 500, 0, 50000, 0,0,0.5, 0.5,1.0,32, 0).			// green sphere
-			sethalf(0,-1,0, 0,0,0.5, 0.5,1.0,32, 0);
+		sphere( 0, 500, 0, 100, 0,0,0.5, 0.5,1.0,2, 0).			// green sphere
+			sethalf(0,-1,0, 0,0,0.5, 0.5,1.0,2, 0);
 		//sphere(  95, -50,-125, 20, 0,0,1, 0.8,0.7,16, 0.6);			// blue sphere
 
 	// (x0,y0,z0)-(x1,y1,z1)-(x2,y2,z2) = co-planar point (counter-clockwise)
