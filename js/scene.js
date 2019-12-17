@@ -30,12 +30,12 @@
 	// (x,y,z)=centre, r=radius
 	// sphere(x,y,z,r, cr,cg,cb, d,p,pp,rf) {
 		
-		sphere(  0,   100,   200, 170, 0.1,0.1,0.1, 0.5,1.0,64, 1.0);	// white sphere
-		sphere( -40, -45,-130, 25, 1,0,0, 1.0,1.0, 8, 0.6).			// red sphere
- 	   	 setuv(1,0,0, 0,1,0, 0,0, tilefunc).setbitmap("bresil.jpg");
+		//sphere(  0,   100,   200, 170, 0.1,0.1,0.1, 0.5,1.0,64, 1.0);	// white sphere
+		//sphere( -40, -45,-130, 25, 1,0,0, 1.0,1.0, 8, 0.6).			// red sphere
+ 	   	 //setuv(1,0,0, 0,1,0, 0,0, tilefunc).setbitmap("bresil.jpg");
 		sphere( -70, -20,   0, 50, 0,1,0, 0.5,1.0,16, 0.5).			// green sphere
 			sethalf(0.25,1,-0.25, 0.3,0.5,0.3, 0.5,1.0,32, 0.8);
-		sphere(  95, -50,-125, 20, 0,0,1, 0.8,0.7,16, 0.6);			// blue sphere
+		//sphere(  95, -50,-125, 20, 0,0,1, 0.8,0.7,16, 0.6);			// blue sphere
 
 	// (x0,y0,z0)-(x1,y1,z1)-(x2,y2,z2) = co-planar point (counter-clockwise)
 	// plane(x0,y0,z0, x1,y1,z1, x2,y2,z2, cr,cg,cb, d,ph,pp,rf) 
