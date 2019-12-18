@@ -33,8 +33,8 @@
 		//sphere(  0,   100,   200, 170, 0.1,0.1,0.1, 0.5,1.0,64, 1.0);	// white sphere
 		//sphere( -40, -45,-130, 25, 1,0,0, 1.0,1.0, 8, 0.6).			// red sphere
  	   	 //setuv(1,0,0, 0,1,0, 0,0, tilefunc).setbitmap("bresil.jpg");
-		sphere( 0, 500, 0, 100,  0,0,0.5, 0.01,0.01,1, 0).			// green sphere
-			sethalf(0,-1,0,  0,0,0.5, 0.01,0.01,1, 0);
+		//sphere( 0, -100, -50, 500,  0,0,1, 0,0,0, 0).sethalf(0,-1,0,  0,0,1, 0,0,0, 1);
+
 		//sphere(  95, -50,-125, 20, 0,0,1, 0.8,0.7,16, 0.6);			// blue sphere
 
 	// (x0,y0,z0)-(x1,y1,z1)-(x2,y2,z2) = co-planar point (counter-clockwise)
@@ -66,13 +66,13 @@
 			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/f.jpg");
 
 		//disc(0,500,0, 0,0.2,0, 30000, 0,0,1, 0.5,1.0,32, 2);
-		sphere( 0, 20,10, 20, 0.4,0.4,0.4, 0.5,1.0,32, 1.0);
+		sphere( 0, 20,10, 20, 0.9,0.4,0.4, 0.5,1.0,32, 1.0);
 
 		light( -100, 400, -10, 1,1,1);	// white light
 		light(0,   400,-10, 1,1,1);	// purple light
 		light(100, 400,-20, 1,1,1);
 		light(-100, 400,-30, 1,1,1);
-	        light(0, -10,-410, 1,1,1);
+	        light(0, 100,-50, 1,1,1);
 		createviewmatrix();
 		
 		// apply transform
@@ -97,4 +97,6 @@
 		
 		return !texturewaiting;
 	}
+	
+
 	
