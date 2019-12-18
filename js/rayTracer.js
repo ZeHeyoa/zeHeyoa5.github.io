@@ -21,7 +21,7 @@
 
 	var antialias = false;				// true = SLOOOOOOOOOOOOOOOOOOOOW!
 	var bilinear = true;
-	var cam	= {x:-29, y:28, z:-91, pixelMvt:8};	// camera position
+	var cam	= {x:-290, y:28, z:-91, pixelMvt:8};	// camera position
 //	var cam = {x:120.24, y:151.63, z:218.39};
 	var look={x:-11, y:0, z:-50};		// look at point
 	var up	={x:0, y:1, z:0	};			// up vector
@@ -282,6 +282,8 @@
 			cr += (d*s.cr + p)*li[i].r;
 			cg += (d*s.cg + p)*li[i].g;
 			cb += (d*s.cb + p)*li[i].b;
+
+			//if (cr < 0.1) cr = 0.1; if (cg < 0.1) cg = 0.2;	if (cb < 0.1) cb = 0.5;
 		}
 	}
 	
@@ -322,7 +324,7 @@
 			r.odoto = r.ox*r.ox + r.oy*r.oy + r.oz*r.oz;
 
 			// find closest intersection
-			obj = intersect(obj);
+			obj = intersect(obj);	
 			if (obj<0) break;
 			iobj = obj;
 			shade(obj);
@@ -330,7 +332,6 @@
 			pcr+=cr*rf;	pcg+=cg*rf;	pcb+=cb*rf;
 		}
 		//if (level>=20) { pcr=pcg=pcb=1; }
-		
 		return true;
 	}
 	
@@ -386,7 +387,9 @@
 					r.ddotd = r.odoto + r.dz*r.dz;
 					
 					if (!cast()) {
-						pix[xy]=pix[xy+1]=pix[xy+2]=0;
+						pix[xy]=51;
+						pix[xy+1]=112;
+						pix[xy+2]=130;
 						continue;
 					}
 					pix[xy]=(pcr>1)?255:(pcr*255|0);
@@ -451,4 +454,6 @@
 		}
 	}
 	
+	
+
 	
