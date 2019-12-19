@@ -324,8 +324,9 @@
 			r.odoto = r.ox*r.ox + r.oy*r.oy + r.oz*r.oz;
 
 			// find closest intersection
-			obj = intersect(obj);	
-			if (obj<0) break;
+			obj = intersect(obj);
+			
+			if (obj<0) {cr=0.1;cg=0.4;cb=0.6;break;}
 			iobj = obj;
 			shade(obj);
 			
