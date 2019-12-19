@@ -393,7 +393,7 @@
 						pix[xy+2]=130;
 						continue;
 					}
-					pix[xy]=(pcr>1)?255:(pcr*255|100);
+					pix[xy]=(pcr>1)?255:(pcr*255|0);
 					pix[xy+1]=(pcg>1)?255:(pcg*255|0);
 					pix[xy+2]=(pcb>1)?255:(pcb*255|0);
 					pcr=pcg=pcb=0;
