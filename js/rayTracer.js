@@ -314,7 +314,7 @@
 		// recurse reflections
 		for (level=1; level<maxlevel; level++) {
 			rf *= (ndir<0 && ob[obj].inside) ? ob[obj].inside.rf : ob[obj].rf;
-			if (rf<=0) break;
+			if (rf<=0) {cr=0.1;cg=0.4;cb=0.6;break;}
 			// calculate reflected ray
 			t = 2*(nx*r.dx + ny*r.dy + nz*r.dz);
 			r.ox = ix;		r.oy = iy;		r.oz = iz;
