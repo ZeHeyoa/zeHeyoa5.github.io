@@ -325,7 +325,7 @@
 
 			// find closest intersection
 			obj = intersect(obj);
-			if (obj<0) {cr=0.1;cg=0.4;cb=0.6;}
+			
 			if (obj<0) break;
 			iobj = obj;
 			shade(obj);
