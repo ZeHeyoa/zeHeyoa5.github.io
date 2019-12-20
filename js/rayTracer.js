@@ -314,7 +314,7 @@
 		// recurse reflections
 		for (level=1; level<maxlevel; level++) {
 			rf *= (ndir<0 && ob[obj].inside) ? ob[obj].inside.rf : ob[obj].rf;
-			if (rf<=0) {cr=0.1;cg=0.4;cb=0.6;break;}
+			if (rf<=0) break;
 			// calculate reflected ray
 			t = 2*(nx*r.dx + ny*r.dy + nz*r.dz);
 			r.ox = ix;		r.oy = iy;		r.oz = iz;
@@ -325,8 +325,8 @@
 
 			// find closest intersection
 			obj = intersect(obj);
-			
-			if (obj<0) {cr=0.1;cg=0.4;cb=0.6;break;}
+			if (obj<0) {cr=0.1;cg=0.4;cb=0.6;}
+			if (obj<0) break;
 			iobj = obj;
 			shade(obj);
 			
@@ -393,9 +393,9 @@
 						pix[xy+2]=130;
 						continue;
 					}
-					pix[xy]=(pcr===0)?51:(pcr>1)?255:(pcr*255|0);
-					pix[xy+1]=(pcg===0)?112:(pcg>1)?255:(pcg*255|0);
-					pix[xy+2]=(pcb===0)?1301:(pcb>1)?255:(pcb*255|0);
+					pix[xy]=(pcr>1)?255:(pcr*255|0);
+					pix[xy+1]=(pcg>1)?255:(pcg*255|0);
+					pix[xy+2]=(pcb>1)?255:(pcb*255|0);
 					pcr=pcg=pcb=0;
 				}
 			}
