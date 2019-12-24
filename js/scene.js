@@ -27,21 +27,38 @@
 		numob = numsp = numpl = numli = numcy = 0;
 
 
+		// plafond spherique
+		//sphere( 0, 100, -50, 500,   0,0,1, 0,0,0, 0).sethalf(0,-1,0,  0.2,0.2,0.8, 0.5,0, 10, 0);
+		
 	// (x,y,z)=centre, r=radius
 	// sphere(x,y,z,r, cr,cg,cb, d,p,pp,rf) {
 		
 		//sphere(  0,   100,   200, 170, 0.1,0.1,0.1, 0.5,1.0,64, 1.0);	// white sphere
 		//sphere( -40, -45,-130, 25, 1,0,0, 1.0,1.0, 8, 0.6).			// red sphere
  	   	 //setuv(1,0,0, 0,1,0, 0,0, tilefunc).setbitmap("bresil.jpg");
-sphere( 0, 100, -50, 500,   0,0,1, 0,0,0, 0).sethalf(0,-1,0,  0.2,0.2,0.8, 0.5,0, 10, 0);
-sphere( 0, -101, -50, 500,  0,1,0, 0,0,0, 0).sethalf(0,1,0,  .2,0.8,.2, 0.5,0, 10, 0);
+		//sphere( 0, -100, -50, 500,  0,0,1, 0,0,0, 0).sethalf(0,-1,0,  0,0,1, 0,0,0, 1);
+
 		//sphere(  95, -50,-125, 20, 0,0,1, 0.8,0.7,16, 0.6);			// blue sphere
 
 	// (x0,y0,z0)-(x1,y1,z1)-(x2,y2,z2) = co-planar point (counter-clockwise)
 	// plane(x0,y0,z0, x1,y1,z1, x2,y2,z2, cr,cg,cb, d,ph,pp,rf) 
-		
-		//plane(0,-70,0, 0,-70,-10, -20,-70,0, 1,1,1, 0.6,1.0,32, 0.4).setuv(300,0,0, 0,0,300, 0,0, tilefunc).setbitmap("c.jpg");
-		
+	
+		//plane(0,1200,0, 0,1200,-10, -20,1200,0, 0.4,0.4,1, 0.06,0,0, 0);//.setuv(300,0,0, 0,0,300, 0,0, tilefunc).setbitmap("image/z.jpg");
+		//plane(0,500,0, 0,500,1, 1, 500,-1, 1,0,0, .5,0,0, 0);//.setuv(0,0, 0, 0,0,0, 0,0, bitfunc).setbitmap("image/g.jpg");
+
+		// cote fond
+		plane(10000,1,0, 10000,0,-1, 10000,0,1, 0.2,0.4,1, .5,0,0, 0);//.setuv(0,0, 0, 0,0,0, 0,0, bitfunc).setbitmap("image/z.jpg");
+		// cote devant
+		plane(-10000,0,1, -10000,0,-1, -10000,1,0, 0.2,0.4,1, .5,0,0, 0);//.setuv(0,0, 0, 0,0,0, 0,0, bitfunc).setbitmap("image/z.jpg");
+		// cote sol
+		plane(-1,-1000,0, 0,-1000,1, 0,-1000,-1, 0.2,1,0.4, 0.1,0,0, 0);//.setuv(0,0, 0, 0,0,0, 0,0, bitfunc).setbitmap("image/z.jpg");		
+		// cote plafond
+		plane(1,10000,0, 0,10000,1, 0,10000,-1, 0.2,0.4,1, .5,0,0, 0);//.setuv(0,0, 0, 0,0,0, 0,0, bitfunc).setbitmap("image/z.jpg");
+		// cote gauche
+		plane(-1,0,10000, -1,1,10000, 1,1,10000, 0.2,0.4,1, .5,0,0, 0);
+        // cote droit
+		plane(1,1,-10000, -1,1,-10000, -1,0,-10000, 0.2,0.4,1, .5,0,0, 0);
+
 		//disc(0,60,140,	0,0,-1,		150, 1,1,1, 0.5,1.0,64, 0.6).setuv(300,0,0, 0,300,0, 0.5,0.5, bitfunc).setbitmap("b.jpg");
 		disc(0,-70,-50,	0,1,0,		130, 1,1,1, 0.2,0.1,0.5, 0.005)
 		.setuv(200,0,0, 0,0,200, 0.5,0.55, tilefunc)
@@ -59,21 +76,20 @@ sphere( 0, -101, -50, 500,  0,1,0, 0,0,0, 0).sethalf(0,1,0,  .2,0.8,.2, 0.5,0, 1
 		
 		// (x,y,z)=base, (x1,y1,z1)=end, r=radius
 	   // cylinder(x,y,z, x1,y1,z1, r, cr,cg,cb, d,p,pp,rf) 		
-		cylinder(20,-70,-110, 20,20,-110, 30, 1,1,1, 0.6,1.0,32, 0.25)
+		cylinder(20,-70,-110, 20,20,-110, 30, 1,1,1, 0.6,1.0,32, 0.025)
 			.setuv(-3,0,0, 0,1,0, 0,0, tilefunc)
 			.setbitmap("image/vee.jpg")
 			.setinside(0.35,0.35,0.35, 0.5,1.0,32, 1.0)
 			.setuv(10,0,0, 0,6,0, 0,0, tilefunc).setbitmap("image/f.jpg");
 
 		//disc(0,500,0, 0,0.2,0, 30000, 0,0,1, 0.5,1.0,32, 2);
-		sphere( 0, 20,10, 20, 0.9,0.4,0.4, 0.5,1.0,32, 1.0);
-		
- 
+		sphere( 0, 20,10, 20, 0.4,0.4,0.4, 0.5,1.0,128, 1.0);
+
 		light( -100, 400, -10, 1,1,1);	// white light
 		light(0,   400,-10, 1,1,1);	// purple light
 		light(100, 400,-20, 1,1,1);
 		light(-100, 400,-30, 1,1,1);
-	        light(0, 100,-50, 1,1,1);
+	        light(0, 400,-50, 1,1,1);
 		createviewmatrix();
 		
 		// apply transform
