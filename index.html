@@ -1,35 +1,686 @@
 <!DOCTYPE html>
 <html>
-<head>
- <script src='js/dat.gui.min.js'></script>
- <script src='js/rayTracer.js' ></script>
- <script src='js/disc.js'></script>
- <script src='js/plane.js' ></script>
- <script src='js/sphere.js'></script>
- <script src='js/cylinder.js' ></script>
- <script src='js/light.js' ></script>
- <script src='js/imageMgr.js'></script>
- <script src='js/scene.js'></script>
+	<head>
 
-  <link rel="stylesheet" href="css/style.css">
-</head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		  <link rel="stylesheet" href="css/style.css">
+				<link rel="stylesheet" type="text/css" href="css/baraja.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="css/custom.css" />
+		<script type="text/javascript" src="js/modernizr.custom.79639.js"></script>
+		<link type="text/css" rel="stylesheet" href="main.css">
+		<style>
+			a {
+				color: #8ff;
+			}
 
-<body>
-	Anti-alias: <input type=checkbox onchange="changeaa()" id="aacheck" />
-	Bilinear Filter: <input type=checkbox id="bicheck" />
+			#menu {
+				position: absolute;
+				bottom: 20px;
+				width: 100%;
+				text-align: center;
+			}
 
-<table border=0 cellpadding=0 cellspacing=0>
-<tr>
-<td align=center valign=top>
+			.element {
+				width: 280px;
+				height: 360px;
+				box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+				border: 1px solid rgba(127,255,255,0.25);
+				font-family: Helvetica, sans-serif;
+				text-align: center;
+				line-height: normal;
+				cursor: default;
+			}
 
-	<div id="canvdiv" style="width:1200px; height:800px" >
-		<canvas id="canv" width=1200 height=800></canvas>
-		<canvas id="canvTmp1" width=1200 height=800 hidden></canvas>
-	</div><br/>
+			.element:hover {
+				box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
+				border: 1px solid rgba(127,255,255,0.75);
+			}
 
+				.element .number {
+					position: absolute;
+					top: 0px;
+					right: 20px;
+					font-size: 12px;
+					color: rgba(127,255,255,0.75);
+				}
 
-</td>
-</tr></table>
- <script src='js/ui.js' ></script>
-</body>
+				.element .symbol {
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					right: 0px;
+					font-size: 60px;
+					font-weight: bold;
+					color: rgba(255,255,255,0.75);
+					text-shadow: 0 0 10px rgba(0,255,255,0.95);
+				}
+
+				.element .details {
+					position: absolute;
+					top: 0px;
+					bottom: 15px;
+					left: 0px;
+					right: 0px;
+					font-size: 22px;
+					color: rgba(127,255,255,0.75);
+				}
+
+			button {
+				color: rgba(127,255,255,0.75);
+				background: transparent;
+				outline: 1px solid rgba(127,255,255,0.75);
+				border: 0px;
+				padding: 5px 10px;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: rgba(0,255,255,0.5);
+			}
+
+			button:active {
+				color: #000000;
+				background-color: rgba(0,255,255,0.75);
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="menu">
+			<button id="table" hidden>TABLE</button>
+		</div>
+
+		<script type="module">
+
+			import * as THREE from './three.module.js';
+
+			import { TWEEN } from './tween.module.min.js';
+			import { TrackballControls } from './TrackballControls.js';
+			import { CSS3DRenderer, CSS3DObject } from './CSS3DRenderer.js';
+
+			var definition = [
+			 {nom : "A" , index : [6,7,8,9,10,11], zoom : 0, color : "rgba(150,250,150,.1)"},
+			 {nom : "M" , index : [3,4,5,12,13,14], zoom :  0, color : "rgba(200,250,200,.1)"},			 
+			 {nom : "D" , index : [0,1,2,15,16,17], zoom : 0, color : "rgba(250,250,150,.1)"}];
+
+            var col = 3*2*3;
+			var ligne = 8;
+            var table = [];
+			var index = 0;
+			var xDepart = -3300;
+			var yDepart = -1200;
+			var joueurSeparation = 500;
+			var groupeSeparation = 0;
+			var colonneSeparation = 100;
+			var typePrecedent = "";
+			for (var i = 0 ; i < col; i++) {
+				table[i] = [];				
+				var type;		
+				for (var k=0;k<definition.length;k++) {
+                    if (definition[k].index.includes(i)) {
+						type = definition[k];
+					}
+				}		
+				
+			 groupeSeparation += (typePrecedent != type.nom) ? joueurSeparation/4 : 0;
+			 typePrecedent = type.nom;
+			 colonneSeparation += 20;
+				for (var j = 0 ; j < ligne; j++) {
+					table[i][j] = {
+				    "nom" : type.nom + index++ ,
+					"x" : xDepart + (i*280) + colonneSeparation + groupeSeparation + ((index > 72) ? joueurSeparation : 0),
+					"y" : yDepart + (j*360),
+					"z" :  type.zoom, 					
+					"color" :  type.color, 
+					"rotationY" : 0};				
+				}
+			}
+
+		/*	var table = [
+				"Defenseur1", "Iron", "55.845",        2000,  -1400, 0,  0,
+				"Defenseur2", "Cobalt", "58.933195",   2000,  -1000,  0,  0,
+				"Defenseur3", "Cobalt", "58.933195",   2000,  -600,  0,  0,
+				"Defenseur4", "Cobalt", "58.933195",   2000,  -200,  0,  0,
+				"Defenseur5", "Iron", "55.845",        2600,  400, 0,  0,
+				"Defenseur6", "Cobalt", "58.933195",   2600,  800,  0,  0,
+				"Defenseur7", "Cobalt", "58.933195",   2600,  1200,  0,  0,
+				"Defenseur8", "Cobalt", "58.933195",   2600,  1600,  0,  0,
+
+				"Milieu", "Iron", "55.845",        1500,  -1000, -150,  -.8,
+				"Milieu", "Cobalt", "58.933195",   1500,    -300,  -150,  -.8,
+				"Milieu", "Cobalt", "58.933195",   1500,   400,  -150,  -.8,
+				"Milieu", "Cobalt", "58.933195",   1500,   1100,  -150,  -.8,
+				"Milieu", "Iron", "55.845",        1200,  -1000, -600,  -.8,
+				"Milieu", "Cobalt", "58.933195",   1200,    -300,  -600,  -.8,
+				"Milieu", "Cobalt", "58.933195",   1200,   400,  -600,  -.8,
+				"Milieu", "Cobalt", "58.933195",   1200,   1100,  -600,  -.8,
+
+				"Attaquant", "Iron", "55.845",        700,  -1000, -700,  0,
+				"Attaquant", "Cobalt", "58.933195",   700,    -300,  -700,  0,
+				"Attaquant", "Cobalt", "58.933195",   700,   400,  -700,  0,
+				"Attaquant", "Cobalt", "58.933195",   700,   1100,  -700,  0,
+				"Attaquant", "Iron", "55.845",        100,  -1000, -700,  0,
+				"Attaquant", "Cobalt", "58.933195",   100,    -300,  -700, 0,
+				"Attaquant", "Cobalt", "58.933195",   100,   400,  -700,  0,
+				"Attaquant", "Cobalt", "58.933195",   100,   1100,  -700,  0,
+
+			];*/
+
+			var camera, scene, renderer;
+			var controls;
+
+			var objects = [];
+			var targets = { table: []};
+
+			init();
+			animate();
+
+			function init() {
+
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 );
+				camera.position.z = 4000;
+				camera.position.y = 0;
+				camera.position.x = 0;
+				var x_axis = new THREE.Vector3( 1, 0, 0 );
+                var quaternion = new THREE.Quaternion;
+                //camera.position.applyQuaternion(quaternion.setFromAxisAngle(x_axis, -25));
+                //camera.up.applyQuaternion(quaternion.setFromAxisAngle(x_axis, -5));
+
+				scene = new THREE.Scene();
+
+				// table
+
+	            var groupe = document.createElement( 'div' );
+				groupe.id = 'UniqueDropzone';
+					var object = new CSS3DObject( groupe );
+					scene.add( object );
+					
+				for (var i = 0 ; i < col; i++) {
+				 for (var j = 0 ; j < ligne; j++) {
+
+					var element = document.createElement( 'div' );
+					element.className = 'element BlockWrapper--isDropzone';
+					element.dataset.dropzone = 'attaque1';
+					element.style.backgroundColor = table[i][j].color;
+
+				/*	var number = document.createElement( 'div' );
+					number.className = 'number';
+					number.textContent = ( i / 5 ) + 1;
+					element.appendChild( number );
+
+					var symbol = document.createElement( 'div' );
+					symbol.className = 'symbol';
+					symbol.textContent = table[i][j].nom;
+					element.appendChild( symbol );*/
+
+					var details = document.createElement( 'div' );
+					details.className = 'details';
+					details.innerHTML = table[i][j].nom;
+					element.appendChild( details );
+					groupe.appendChild( element );
+//element.innerHTML = "<iframe width='100' height='200' src='https://www.youtube.com/embed/6v2L2UGZJAM' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+					var object = new CSS3DObject( element );
+					object.position.x = Math.random() * 4000 - 2000;
+					object.position.y = Math.random() * 4000 - 2000;
+					object.position.z = Math.random() * 4000 - 2000;				      
+					scene.add( object );
+
+					objects.push( object );
+
+					//
+
+					var object = new THREE.Object3D();
+					object.position.x = table[i][j].x;
+					object.position.y =  table[i][j].y;
+					object.position.z =  table[i][j].z;
+					object.rotation.y =   table[i][j].rotationY;
+					targets.table.push( object );
+
+				 }
+				}
+
+			
+				var c = "<section class='main'>"
+				+ "<div class='baraja-demo'>"
+				+ "	<ul id='baraja-el' class='baraja-container BlockLayout'>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/1.jpg' alt='image1'/><h4>Coco Loko</h4><p>Total bicycle rights in blog four loko raw denim ex, helvetica sapiente odio placeat.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/2.jpg' alt='image2'/><h4>Vermouth Land</h4><p>Velit chambray fugiat, enim aesthetic esse ullamco typewriter.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/3.jpg' alt='image3'/><h4>Electrodynamics</h4><p>Before they sold out PBR magna jean shorts non seitan ea. Dolor wolf pop-up.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/4.jpg' alt='image4'/><h4>Retinal Bliss</h4><p>Locavore vero ad, before they sold out food truck bushwick helvetica.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/5.jpg' alt='image5'/><h4>Disco Fever</h4><p>Cillum laboris consequat, qui elit retro next level skateboard freegan.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/6.jpg' alt='image6'/><h4>Serenity</h4><p>Truffaut wes anderson hoodie 3 wolf moon labore, fugiat lomo iphone eiusmod vegan.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/7.jpg' alt='image7'/><h4>Dark Honor</h4><p>Chillwave mustache pinterest, marfa seitan umami id farm-to-table iphone.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/8.jpg' alt='image8'/><h4>Nested Happiness</h4><p>Minim post-ironic banksy american apparel iphone wayfarers.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/9.jpg' alt='image9'/><h4>Cherry Country</h4><p>Sint vinyl Austin street art odd future id trust fund, terry richardson cray.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/10.jpg' alt='image10'/><h4>Cherry Country</h4><p>Sint vinyl Austin street art odd future id trust fund, terry richardson cray.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/11.jpg' alt='image11'/><h4>Coco Loko</h4><p>Total bicycle rights in blog four loko raw denim ex, helvetica sapiente odio placeat.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/12.jpg' alt='image12'/><h4>Vermouth Land</h4><p>Velit chambray fugiat, enim aesthetic esse ullamco typewriter.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/3.jpg' alt='image3'/><h4>Electrodynamics</h4><p>Before they sold out PBR magna jean shorts non seitan ea. Dolor wolf pop-up.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/4.jpg' alt='image4'/><h4>Retinal Bliss</h4><p>Locavore vero ad, before they sold out food truck bushwick helvetica.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/5.jpg' alt='image5'/><h4>Disco Fever</h4><p>Cillum laboris consequat, qui elit retro next level skateboard freegan .</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/6.jpg' alt='image6'/><h4>Serenity</h4><p>Truffaut wes anderson hoodie 3 wolf moon labore, fugiat lomo iphone eiusmod vegan.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img   src='images/7.jpg' alt='image7'/><h4>Dark Honor</h4><p>Chillwave mustache pinterest, marfa seitan umami id farm-to-table iphone.</p></div></a></li>"
+				+ "		<li class='BlockWrapper--isDropzone draggable-dropzone--occupied' data-dropzone = 'attaque1'><a href='#' class='Block--isDraggable'><div class='BlockContent'><img  src='images/8.jpg' alt='image8'/><h4>Nested Happiness</h4><p>Minim post-ironic banksy american apparel iphone wayfarers.</p></div></a></li>"
+				+ "	</ul>"
+				+ "<nav class='actions light'>"
+				+ "	<span id='nav-prev'>&lt;</span>"
+				+ "	<span id='nav-next'>&gt;</span>"
+				+ "	<span id='open'>O</span>"
+				+ "</nav>"
+				+ "</div>"
+				/*+ "<nav class='actions'>"
+				+ "	<span id='nav-fan'>Fan right</span>"
+				+ "	<span id='nav-fan2'>Fan left</span>"
+				+ "	<span id='nav-fan3'>Fan right (asym.)</span>"
+				+ "	<span id='nav-fan4'>Fan left (asym.)</span>"
+				+ "	<span id='nav-fan5'>Rotated spread (horizontal)</span>"
+				+ "	<span id='nav-fan6'>Rotated spread (vertical)</span>"
+				+ "	<span id='nav-fan7'>Linear spread right</span>"
+				+ "	<span id='nav-fan8'>Linear spread left</span>"
+				+ "	<span id='nav-fan9'>Linear spread right (irregular)</span>"
+				+ "	<span id='nav-fan10'>Linear spread left (irregular)</span>"
+     			+ "	<span id='nav-fanOther1'>other</span>"
+				+ "	<span id='nav-fanOther2'>other</span>"
+				+ "	<span id='nav-fanOther3'>other</span>"
+				+ "	<span id='nav-fanOther4'>other...</span>"
+     			+ "	<span id='add'>Add items</span>"
+				+ "</nav>"*/
+			    + "</section>";
+				
+				var element = document.createElement( 'div' );
+					element.className = 'container';
+					element.innerHTML = c;
+				var object = new CSS3DObject( element );
+					object.position.x = Math.random() * 400 - 200;
+					object.position.y = Math.random() * 400 - 200;
+					object.position.z = Math.random() * 400 - 200;
+					scene.add( object );
+
+					objects.push( object );
+
+					//
+
+					var object = new THREE.Object3D();
+					object.position.x = -120;
+					object.position.y =  -800;
+					object.position.z =  1200;
+					targets.table.push( object );
+				
+				renderer = new CSS3DRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+				//
+
+				controls = new TrackballControls( camera, renderer.domElement );
+				controls.minDistance = 500;
+				controls.maxDistance = 6000;
+				//controls.addEventListener( 'change', render );
+
+				var button = document.getElementById( 'table' );
+				button.addEventListener( 'click', function () {
+
+					transform( targets.table, 2000 );
+
+				}, false );
+
+				transform( targets.table, 2000 );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+loadDraggable([groupe, element.querySelectorAll('.BlockLayout')[0]]);
+			}
+
+			function transform( targets, duration ) {
+
+				TWEEN.removeAll();
+
+				for ( var i = 0; i < objects.length; i ++ ) {
+
+					var object = objects[ i ];
+					var target = targets[ i ];
+
+					new TWEEN.Tween( object.position )
+						.to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+					new TWEEN.Tween( object.rotation )
+						.to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+				}
+
+				new TWEEN.Tween( this )
+					.to( {}, duration * 2 )
+					.onUpdate( render )
+					.start();
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+				render();
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				TWEEN.update();
+
+				controls.update();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+			
+  
+			
+		</script>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery.baraja.js"></script>
+        <script type="text/javascript">	
+			$(function() {
+
+				var $el = $( '#baraja-el' ),
+					baraja = $el.baraja();
+
+				// navigation
+				$( '#nav-prev' ).on( 'click touchstart', function( event ) {
+
+					baraja.previous();
+				
+				} );
+
+				$( '#nav-next' ).on( 'click touchstart', function( event ) {
+
+					baraja.next();
+				
+				} );
+
+				// simple fan
+				$( '#nav-fan' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 90,
+						direction : 'right',
+						origin : { x : 25, y : 100 },
+						center : true
+					} );
+				
+				} );
+
+				$( '#nav-fan2' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 90,
+						direction : 'left',
+						// note that the x origin changes (symmetric)
+						origin : { x : 75, y : 100 },
+						center : true
+					} );
+				
+				} );
+
+				// more realistic fan: without common origin (means the origin changes / increments by card )
+				$( '#nav-fan3' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 90,
+						direction : 'right',
+						origin : { minX : 20, maxX : 80, y : 100 },
+						center : true,
+						translation : 60
+					} );
+				
+				} );
+
+				$( '#nav-fan4' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 90,
+						direction : 'left',
+						origin : { minX : 20, maxX : 80, y : 100 },
+						center : true,
+						translation : 60
+					} );
+				
+				} );
+
+				// playing with different origins and ranges	
+				$( '#nav-fan5' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 100,
+						direction : 'right',
+						origin : { x : 50, y : 200 },
+						center : true
+					} );
+				
+				} );
+
+				$( '#nav-fan6' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 80,
+						direction : 'left',
+						origin : { x : 200, y : 50 },
+						center : true
+					} );
+				
+				} );
+
+				// center false, playing with translation
+				$( '#nav-fan7' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 20,
+						direction : 'right',
+						origin : { x : 50, y : 200 },
+						center : false,
+						translation : 300
+					} );
+				
+				} );
+
+				$( '#nav-fan8' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 20,
+						direction : 'left',
+						origin : { x : 50, y : 200 },
+						center : false,
+						translation : 300
+					} );
+				
+				} );
+
+				// using scatter : true
+				$( '#nav-fan9' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 20,
+						direction : 'right',
+						origin : { x : 50, y : 200 },
+						center : false,
+						translation : 300,
+						scatter : true
+					} );
+				
+				} );
+
+				$( '#nav-fan10' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 20,
+						direction : 'left',
+						origin : { x : 50, y : 200 },
+						center : false,
+						translation : 300,
+						scatter : true
+					} );
+				
+				} );
+
+				$( '#nav-fanOther1' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 130,
+						direction : 'left',
+						origin : { x : 25, y : 100 },
+						center : false
+					} );
+				
+				} );
+
+				$( '#nav-fanOther2' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 360,
+						direction : 'left',
+						origin : { x : 50, y : 90 },
+						center : false
+					} );
+				
+				} );
+
+				$( '#nav-fanOther3' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 330,
+						direction : 'left',
+						origin : { x : 50, y : 100 },
+						center : true
+					} );
+				
+				} );
+
+				$( '#nav-fanOther4' ).on( 'click touchstart', function( event ) {
+
+					baraja.fan( {
+						speed : 500,
+						easing : 'ease-out',
+						range : 90,
+						direction : 'right',
+						origin : { minX : 20, maxX : 80, y : 100 },
+						center : true,
+						translation : 60,
+						scatter : true
+					} );
+				
+				} );
+
+				// close the baraja
+				$( '#close' ).on( 'click touchstart', function( event ) {
+
+					baraja.close();
+				
+				} );
+
+				// example of how to add more items
+				$( '#add' ).on( 'click touchstart', function( event ) {
+
+					if( $( this ).hasClass( 'disabled' ) ) {
+						return false;
+					}
+
+					$( this ).addClass( 'disabled' );
+
+					baraja.add( $('<li><img src="images/6.jpg" alt="image6"/><h4>Serenity</h4><p>Truffaut wes anderson hoodie 3 wolf moon labore, fugiat lomo iphone eiusmod vegan.</p></li><li><img src="images/7.jpg" alt="image7"/><h4>Dark Honor</h4><p>Chillwave mustache pinterest, marfa seitan umami id farm-to-table iphone.</p></li><li><img src="images/8.jpg" alt="image8"/><h4>Nested Happiness</h4><p>Minim post-ironic banksy american apparel iphone wayfarers.</p></li><li><img src="images/9.jpg" alt="image9"/><h4>Cherry Country</h4><p>Sint vinyl Austin street art odd future id trust fund, terry richardson cray.</p></li>') );
+				
+				} );
+
+			});
+		</script>
+		  <script src="js/draggable.bundle.js"></script>
+<script>
+
+ function loadDraggable(containers) {
+ 
+  //const containers = $('#UniqueDropzone').get();
+  const droppable = new Draggable.Droppable(containers, {
+    draggable: '.Block--isDraggable',
+    dropzone: '.BlockWrapper--isDropzone',
+    mirror: {
+      constrainDimensions: false,
+    },
+  });
+
+  let droppableOrigin;
+  let baliseOrigin;
+  // --- Draggable events --- //
+  droppable.on('drag:start', (evt) => {
+    droppableOrigin = evt.originalSource.parentNode.dataset.dropzone;
+	baliseOrigin = evt.originalSource.parentNode;
+  });
+
+  droppable.on('droppable:dropped', (evt) => {
+
+	if (!droppableOrigin.split(";").includes(evt.dropzone.dataset.dropzone)) {
+      evt.cancel();
+    } else {
+    //$(baliseOrigin).remove(); 
+}	
+  });
+  
+    droppable.on('drag:stop', (evt) => {
+	
+	if (evt.data.originalSource.parentNode.childElementCount == 2) {
+	    $(baliseOrigin).remove(); 
+			var $el = $( '#baraja-el' ),
+					baraja = $el.baraja();
+		baraja.itemsCount -= 1;
+	}
+	
+
+  });
+  
+}
+
+</script>
+	</body>
 </html>
